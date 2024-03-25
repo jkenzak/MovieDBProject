@@ -6,25 +6,33 @@ Create Tables
 ---------------------------
 */
 
+/* Need to create a reviewer table to handle the primary keys */
+/* Create Reviewer Table */
+CREATE TABLE Reviewer
+(
+    ReviewerID int NOT NULL AUTO_INCREMENT,
+    ReviewerType int NOT NULL,
+    PRIMARY KEY (ReviewerID)
+);
+
 /* Create User Table */
 CREATE TABLE User
 (
-    ReviewerID int NOT NULL AUTO_INCREMENT,
+    ReviewerID int NOT NULL,
     Username varchar(255) NOT NULL,
     Password varchar(255) NOT NULL,
-    PRIMARY KEY (ReviewerID)
+    FOREIGN KEY (ReviewerID) REFERENCES Reviewer(ReviewerID)
 );
 
 /* Create Critic Table */
 CREATE TABLE Critic
 (
-    ReviewerID int NOT NULL AUTO_INCREMENT,
+    ReviewerID int NOT NULL,
     CriticName varchar(255) NOT NULL,
     Publisher varchar(255) NOT NULL,
-    PRIMARY KEY (ReviewerID)
+    FOREIGN KEY (ReviewerID) REFERENCES Reviewer(ReviewerID)
 );
 
--- TODO: Figure out how the PKs for Critic and User works
 
 /* Create Director Table */
 CREATE TABLE Director
@@ -54,7 +62,7 @@ CREATE TABLE Review
     ReviewDate date NOT NULL,
     PRIMARY KEY (ReviewID),
     FOREIGN KEY (MovieID) REFERENCES Movie(MovieID),
-    FOREIGN KEY (UserID) REFERENCES User(ReviewerID)
+    FOREIGN KEY (UserID) REFERENCES Reviewer(ReviewerID)
 );
 
 /* Add Constraint for Review Table */
@@ -106,14 +114,14 @@ CREATE TABLE MovieDirector
 /* Create FavoriteMovies Table */
 CREATE TABLE FavoriteMovies
 (
-    ReviewID int,
-    MovieID int,
+    ReviewerID int NOT NULL,
+    MovieID int NOT NULL,
     Ranking int,
-    FOREIGN KEY (ReviewerID) REFERENCES User(ReviewerID),
+    PRIMARY KEY (ReviewerID, MovieID)
+    FOREIGN KEY (ReviewerID) REFERENCES Reviewer(ReviewerID),
     FOREIGN KEY (MovieID) REFERENCES Movie(MovieID)
 );
 
--- TODO: Figure out how to reference PK of both User and Critic
 
 /*
 --------------------------- 
@@ -274,7 +282,8 @@ LEFT OUTER JOIN Director d
 ON d.Name = ci.Director;
 
 /* Add Data to FavoriteMovies */
--- TODO:
+INSERT INTO FavoriteMovies (ReviewerID, MovieID, Ranking)
+VALUES (1, 1432, 1)
 
 /* 
 ---------------------------
@@ -391,4 +400,4 @@ begin
 
 /* Delete Data from FavoriteMovies */
 DELETE FROM FavorieMovies;
---TODO: Need to complete
+WHERE MovieID=1432 AND ReviewerID=1;
