@@ -149,27 +149,68 @@ FROM Actor;
 SELECT *
 FROM Review;
 
+SELECT m.Title, r.Comment
+FROM Review r
+LEFT OUTER JOIN User u
+ON u.ReviewerID=r.ReviewerID
+LEFT OUTER JOIN Movie m
+ON m.MovieID=r.MovieID
+WHERE u.Username="test_user";
+
 /* Retrieve Movie Information */
 SELECT *
 FROM Movie;
+
+SELECT *
+FROM Movie m
+WHERE m.Title="The Shawshank Redemption";
 
 /* Retrieve Genre Information */
 SELECT *
 FROM Genre;
 
+SELECT g.GenreType
+FROM Genre g
+RIGHT OUTER JOIN Movie m
+ON m.Genre=g.GenreID
+WHERE m.Title="The Shawshank Redemption"
+
 /* Retrieve MovieActor Information */
 SELECT *
 FROM MovieActor;
+
+SELECT a.Name
+FROM Movie m
+LEFT OUTER JOIN MovieActor ma
+ON m.MovieID=ma.MovieID
+LEFT OUTER JOIN Actor a
+ON ma.ActorID=a.ActorID
+WHERE m.Title="The Shawshank Redemption";
 
 /* Retrieve MovieDirector Information */
 SELECT *
 FROM MovieDirector;
 
+SELECT d.Name
+FROM Movie m
+LEFT OUTER JOIN MovieDirector md
+ON m.MovieID=md.MovieID
+LEFT OUTER JOIN Director d
+ON d.DirectorID=md.DirectorID
+WHERE m.Title="The Shawshank Redemption";
+
 /* Retrieve FavoriteMovies Information */
 SELECT *
 FROM FavoriteMovies;
 
--- TODO: Add more specific Retrieval Queries
+SELECT m.Title, fm.Ranking
+FROM FavoriteMovies fm
+LEFT OUTER JOIN User u
+ON fm.ReviewerID=u.ReviewerID
+LEFT OUTER JOIN Movie m
+ON fm.MovieID=m.MovieID
+WHERE u.Username="test_user";
+
 
 /* 
 ---------------------------
