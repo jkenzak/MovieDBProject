@@ -57,6 +57,13 @@ CREATE TABLE Review
     FOREIGN KEY (UserID) REFERENCES User(ReviewerID)
 );
 
+/* Add Constraint for Review Table */
+ALTER TABLE Review
+ADD CONSTRAINT chk_ReviewDate
+CHECK (
+    ReviewDate >= (SELECT ReleaseDate FROM Movie WHERE Movie.MovieID = Review.MovieID)
+    AND ReviewDate <= CURRENT_DATE
+);
 
 /* Create Movie Table */
 CREATE TABLE Movie
@@ -279,6 +286,19 @@ Update Data
 UPDATE clean_imdb
 SET Genre = (SELECT GenreID FROM Genre WHERE GenreType=clean_imdb.Genre)
 
+/* Update AvgRating in Movie Table */
+CREATE TRIGGER trg_UpdateAverageRating
+AFTER INSERT OR UPDATE OR DELETE ON Review
+FOR EACH ROW
+BEGIN
+    UPDATE Movie
+    SET AverageRating = (
+        SELECT AVG(Rating)
+        FROM Review
+        WHERE MovieID = NEW.MovieID
+    )
+    WHERE MovieID = NEW.MovieID;
+END;
 
 /* 
 ---------------------------
