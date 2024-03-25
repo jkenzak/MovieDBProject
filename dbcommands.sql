@@ -307,21 +307,88 @@ Delete Data
 */
 
 /* Delete Data from User */
+DELETE FROM User
+WHERE ReviewerID=id;
 
 /* Delete Data from Critic */
+DELETE FROM Critic
+WHERE ReviewerID=id;
 
 /* Delete Data from Director */
+DELETE FROM Director
+WHERE DirectorID=id;
 
 /* Delete Data from Actor */
+DELETE FROM Actor
+WHERE ActorID=id;
 
 /* Delete Data from Review */
+DELETE FROM Review
+WHERE ReviewID=id;
+
+CREATE TRIGGER removeUserReview
+AFTER DELETE ON User
+FOR each row
+begin
+    DELETE FROM Review
+    WHERE Review.UserID=old.ReviewerID;
+end#
+
+CREATE TRIGGER removeCriticReview
+AFTER DELETE ON Critic
+FOR each row
+begin
+    DELETE FROM Review
+    WHERE Review.UserID=old.ReviewerID;
+end#
 
 /* Delete Data from Movie */
+DELETE FROM Movie
+WHERE MovieID=id;
 
 /* Delete Data from Genre */
+DELETE FROM Genre
+WHERE GenreID=id;
 
 /* Delete Data from MovieActor */
+DELETE FROM MovieActor
+WHERE MovieID=movie_id AND ActorID=actor_id;
+
+CREATE TRIGGER removedMovieActor
+AFTER DELETE ON Movie
+FOR each row
+begin
+    DELETE FROM MovieActor
+    WHERE MovieID=old.MovieID;
+end#
+
+CREATE TRIGGER removedActorMovie
+AFTER DELETE ON Actor
+FOR each row
+begin
+    DELETE FROM MovieActor
+    WHERE ActorID=old.ActorID;
+end#
 
 /* Delete Data from MovieDirector */
+DELETE FROM MovieDirector
+WHERE MovieID=move_id AND DirectorID=director_id;
+
+CREATE TRIGGER removedMovieDirector
+AFTER DELETE ON Movie
+FOR each row
+begin
+    DELETE FROM MovieDirector
+    WHERE MovieID=old.MovieID;
+end#
+
+CREATE TRIGGER removedDirectorMovie
+AFTER DELETE ON Director
+FOR each row
+begin
+    DELETE FROM MovieDirector
+    WHERE DirectorID=old.DirectorID; 
 
 /* Delete Data from FavoriteMovies */
+DELETE FROM FavorieMovies;
+--TODO: Need to complete
