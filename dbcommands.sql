@@ -6,22 +6,13 @@ Create Tables
 ---------------------------
 */
 
-/* Need to create a reviewer table to handle the primary keys */
-/* Create Reviewer Table */
-CREATE TABLE Reviewer
-(
-    ReviewerID int NOT NULL AUTO_INCREMENT,
-    ReviewerType int NOT NULL,
-    PRIMARY KEY (ReviewerID)
-);
-
 /* Create User Table */
 CREATE TABLE User
 (
     ReviewerID int NOT NULL,
     Username varchar(255) NOT NULL,
     Password varchar(255) NOT NULL,
-    FOREIGN KEY (ReviewerID) REFERENCES Reviewer(ReviewerID)
+    PRIMARY KEY (ReviewerID)
 );
 
 /* Create Critic Table */
@@ -30,7 +21,7 @@ CREATE TABLE Critic
     ReviewerID int NOT NULL,
     CriticName varchar(255) NOT NULL,
     Publisher varchar(255) NOT NULL,
-    FOREIGN KEY (ReviewerID) REFERENCES Reviewer(ReviewerID)
+    PRIMARY KEY (ReviewerID)
 );
 
 
@@ -38,7 +29,7 @@ CREATE TABLE Critic
 CREATE TABLE Director
 (
     DirectorID int NOT NULL AUTO_INCREMENT,
-    Name varchar(255) NOT NULL,
+    Name varchar(255) UNIQUE,
     PRIMARY KEY (DirectorID)
 );
 
@@ -47,7 +38,14 @@ CREATE TABLE Director
 CREATE TABLE Actor
 (
     ActorID int NOT NULL AUTO_INCREMENT,
-    Name varchar(255) Not NULL UNIQUE,
+    Name varchar(255) UNIQUE,
+    PRIMARY KEY (ActorID)
+);
+
+CREATE TABLE Actor
+(
+    ActorID int NOT NULL AUTO_INCREMENT,
+    Name varchar(255) UNIQUE,
     PRIMARY KEY (ActorID)
 );
 
@@ -61,8 +59,7 @@ CREATE TABLE Review
     Rating float,
     ReviewDate date NOT NULL,
     PRIMARY KEY (ReviewID),
-    FOREIGN KEY (MovieID) REFERENCES Movie(MovieID),
-    FOREIGN KEY (UserID) REFERENCES Reviewer(ReviewerID)
+    FOREIGN KEY (MovieID) REFERENCES Movie(MovieID)
 );
 
 /* Add Constraint for Review Table */
@@ -117,8 +114,8 @@ CREATE TABLE FavoriteMovies
     ReviewerID int NOT NULL,
     MovieID int NOT NULL,
     Ranking int,
-    PRIMARY KEY (ReviewerID, MovieID)
-    FOREIGN KEY (ReviewerID) REFERENCES Reviewer(ReviewerID),
+    PRIMARY KEY (ReviewerID, MovieID),
+    FOREIGN KEY (ReviewerID) REFERENCES User(ReviewerID),
     FOREIGN KEY (MovieID) REFERENCES Movie(MovieID)
 );
 
@@ -219,8 +216,9 @@ Add Data
 */
 
 /* Add Data to User */
-INSERT INTO User (Username, Password)
-VALUES ('test_user', 'password123');
+INSERT INTO User
+VALUES ('test_user', 'password123')
+
 
 /* Add Data to Critic */
 INSERT INTO Critic (CriticName, Publisher)
@@ -232,7 +230,7 @@ AFTER INSERT ON Movie
 FOR each row
 begin
     INSERT IGNORE INTO Director (Name)
-    VALUES ((SELECT Director FROM clean_imdb WHERE clean_imdb.Series_Title=new.Title));
+    VALUES ((SELECT Director FROM MovieData WHERE MovieData.Series_Title=new.Title));
 end#
 
 /* Add Data to Actor */
@@ -242,13 +240,13 @@ AFTER INSERT ON Movie
 FOR each row
 begin
     INSERT IGNORE INTO Actor (Name)
-    VALUES ((SELECT Star1 FROM clean_imdb WHERE clean_imdb.Series_Title=new.Title));
+    VALUES ((SELECT Star1 FROM MovieData WHERE MovieData.Series_Title=NEW.Title));
     INSERT IGNORE INTO Actor (Name)
-    VALUES ((SELECT Star2 FROM clean_imdb WHERE clean_imdb.Series_Title=new.Title));
+    VALUES ((SELECT Star2 FROM MovieData WHERE MovieData.Series_Title=NEW.Title));
     INSERT IGNORE INTO Actor (Name)
-    VALUES ((SELECT Star3 FROM clean_imdb WHERE clean_imdb.Series_Title=new.Title));
+    VALUES ((SELECT Star3 FROM MovieData WHERE MovieData.Series_Title=NEW.Title));
     INSERT IGNORE INTO Actor (Name)
-    VALUES ((SELECT Star4 FROM clean_imdb WHERE clean_imdb.Series_Title=new.Title));
+    VALUES ((SELECT Star4 FROM MovieData WHERE MovieData.Series_Title=NEW.Title));
 end#
 
 /* Add Data to Review */
@@ -284,7 +282,7 @@ INSERT INTO Genre (GenreType) VALUES
 INSERT INTO MovieActor (MovieID, ActorID)
 SELECT MovieID, ActorID 
 FROM Movie m 
-LEFT OUTER JOIN clean_imdb ci 
+LEFT OUTER JOIN MovieData ci 
 ON m.Title = ci.Series_Title 
 LEFT OUTER JOIN Actor a 
 ON a.Name = ci.Star1;
@@ -292,7 +290,7 @@ ON a.Name = ci.Star1;
 INSERT INTO MovieActor (MovieID, ActorID)
 SELECT MovieID, ActorID 
 FROM Movie m 
-LEFT OUTER JOIN clean_imdb ci 
+LEFT OUTER JOIN MovieData ci 
 ON m.Title = ci.Series_Title 
 LEFT OUTER JOIN Actor a 
 ON a.Name = ci.Star2;
@@ -300,7 +298,7 @@ ON a.Name = ci.Star2;
 INSERT INTO MovieActor (MovieID, ActorID)
 SELECT MovieID, ActorID 
 FROM Movie m 
-LEFT OUTER JOIN clean_imdb ci 
+LEFT OUTER JOIN MovieData ci 
 ON m.Title = ci.Series_Title 
 LEFT OUTER JOIN Actor a 
 ON a.Name = ci.Star3;
@@ -308,16 +306,16 @@ ON a.Name = ci.Star3;
 INSERT INTO MovieActor (MovieID, ActorID)
 SELECT MovieID, ActorID 
 FROM Movie m 
-LEFT OUTER JOIN clean_imdb ci 
+LEFT OUTER JOIN MovieData ci 
 ON m.Title = ci.Series_Title 
 LEFT OUTER JOIN Actor a 
 ON a.Name = ci.Star4;
 
 /* Add Data to MovieDirector */
 INSERT INTO MovieDirector (MovieID, DirectorID)
-SELECT MovieID. DirectorID
+SELECT MovieID, DirectorID
 FROM Movie m 
-LEFT OUTER JOIN clean_imdb ci 
+LEFT OUTER JOIN MovieData ci 
 ON m.Title = ci.Series_Title 
 LEFT OUTER JOIN Director d 
 ON d.Name = ci.Director;
@@ -332,9 +330,9 @@ Update Data
 ---------------------------
 */
 
-/* Update clean_imdb */
-UPDATE clean_imdb
-SET Genre = (SELECT GenreID FROM Genre WHERE GenreType=clean_imdb.Genre)
+/* Update MovieData */
+UPDATE MovieData
+SET Genre = (SELECT GenreID FROM Genre WHERE GenreType=MovieData.Genre)
 
 /* Update AvgRating in Movie Table */
 CREATE TRIGGER trg_UpdateAverageRating
@@ -348,7 +346,23 @@ BEGIN
         WHERE MovieID = NEW.MovieID
     )
     WHERE MovieID = NEW.MovieID;
-END;
+END#
+
+UPDATE User
+SET Username='new_user'
+WHERE ReviewerID=1;
+
+UPDATE Movie
+SET ReleaseDate=2024
+WHERE MovieID=1;
+
+UPDATE FavoriteMovies
+SET Ranking = 1
+WHERE MovieID=1 AND ReviewerID=4;
+
+UPDATE Review
+SET Comment = 'This was actually a good movie when I rewatched it.'
+WHERE ReviewID=12;
 
 /* 
 ---------------------------
