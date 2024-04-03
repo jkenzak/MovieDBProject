@@ -7,18 +7,25 @@ require("request-db.php");
 <?php 
 
 $list_of_movies = getAllMovies();
+$add_form = False;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-  // if (!empty($_POST['addBtn']))
-  // {
-  //     addRequests($_POST['requestedDate'], $_POST['roomNo'], $_POST['requestedBy'], $_POST['requestDesc'], $_POST['priority_option']);
-  //     $list_of_requests = getAllRequests();
-  // }
-  if (!empty($_POST['updateBtn']))
+  if (!empty($_POST['addBtn']))
+  {
+      addReview($_POST['movieID'], $_POST['userID'], $_POST['comment'], $_POST['rating'], $_POST['date']);
+      $list_of_reviews = getReviewsByMovieId($_POST['movieID']);
+      $review_movie_id = $_POST['movieID'];
+      $list_of_movies = getAllMovies();
+  }
+  else if (!empty($_POST['viewBtn']))
   {  
       $list_of_reviews = getReviewsByMovieId($_POST['MovieID']);
       $review_movie_id = $_POST['MovieID'];
+  }
+  else if (!empty($_POST['movieaddBtn']))
+  {
+    $add_form = True;
   }   
   // else if (!empty($_POST['cofmBtn']))
   // {
@@ -54,68 +61,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <body>  
 <?php include("header.php"); ?>
 
-<!-- <div class="container">
+<div class="container">
   <div class="row g-3 mt-2">
     <div class="col">
-      <h2>Maintenance Request</h2>
+      <h2>Movie Reviews</h2>
     </div>  
   </div>
   
  
-
+<?php if($add_form): ?>
   <form method="post" action="<?php $_SERVER['PHP_SELF'] ?>" onsubmit="return validateInput()">
     <table style="width:98%">
       <tr>
         <td width="50%">
           <div class='mb-3'>
-            Requested date:
+            Movie ID
             <input type='text' class='form-control' 
-                   id='requestedDate' name='requestedDate' 
-                   placeholder='Format: yyyy-mm-dd' 
-                   pattern="\d{4}-\d{1,2}-\d{1,2}" 
-                   value="<?php if ($request_to_update != null && $clear != True) echo $request_to_update['reqDate'] ?>" />
+                   id='movieID' name='movieID' 
+                   placeholder='' 
+                   value="" />
           </div>
         </td>
         <td>
           <div class='mb-3'>
-            Room Number:
-            <input type='text' class='form-control' id='roomNo' name='roomNo' 
-            value="<?php if ($request_to_update != null) echo $request_to_update['roomNumber'] ?>" />
+            User ID
+            <input type='text' class='form-control' id='userID' name='userID' 
+            value="" />
           </div>
         </td>
       </tr>
       <tr>
         <td colspan=2>
           <div class='mb-3'>
-            Requested by: 
-            <input type='text' class='form-control' id='requestedBy' name='requestedBy'
-                   placeholder='Enter your name'
-                   value="<?php if ($request_to_update != null) echo $request_to_update['reqBy'] ?>" />
+            Comment 
+            <input type='text' class='form-control' id='comment' name='comment'
+                   placeholder='Enter your comment'
+                   value="" />
           </div>
         </td>
       </tr>
       <tr>
         <td colspan=2>
           <div class="mb-3">
-            Description of work/repair:
-            <input type='text' class='form-control' id='requestDesc' name='requestDesc'
-            value="<?php if ($request_to_update != null) echo $request_to_update['repairDesc'] ?>" />
+            Rating
+            <input type='text' class='form-control' id='rating' name='rating'
+            value="" />
         </div>
         </td>
       </tr>
       <tr>
         <td colspan=2>
           <div class='mb-3'>
-            Requested Priority:
-            <select class='form-select' id='priority_option' name='priority_option'>
-              <option selected></option>
-              <option value='high' <?php if ($request_to_update!=null && $request_to_update['reqPriority']=='high') echo ' selected="selected"' ?> >
-                High - Must be done within 24 hours</option>
-              <option value='medium' <?php if ($request_to_update!=null && $request_to_update['reqPriority']=='medium') echo ' selected="selected"' ?> >
-                Medium - Within a week</option>
-              <option value='low' <?php if ($request_to_update!=null && $request_to_update['reqPriority']=='low') echo ' selected="selected"' ?> >
-                Low - When you get a chance</option>
-            </select>
+            Date
+            <input type='text' class='form-control' id='date' name='date'
+            value="" />
           </div>
         </td>
       </tr>
@@ -138,38 +137,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     <div>
   </div>  
 </form>
-
-</div> -->
+<?php endif; ?>
+</div>
 
 
 <!-- <hr/> -->
 <div class="container">
-<h3>List of requests</h3>
+<h3>Movie List</h3>
 <div class="row justify-content-center">  
 <table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
   <thead>
   <tr style="background-color:#B0B0B0">
-    <th><b>ReqID</b></th>
-    <th><b>Date</b></th>        
-    <th><b>Room#</b></th> 
-    <th><b>By</b></th>
-    <th><b>Description</b></th>        
-    <th><b>Priority</b></th> 
-    <th><b>Update?</b></th>
-    <th><b>Delete?</b></th>
+    <th><b>Movie ID</b></th>
+    <th><b>Title</b></th>        
+    <th><b>Release Date</b></th> 
+    <th><b>Runtime</b></th>
+    <th><b>Average Rating</b></th>        
+    <th><b>Reviews</b></th> 
+    <th></th>
   </tr>
   </thead>
   <?php foreach ($list_of_movies as $movie_info): ?>
   <tr>
      <td><?php echo $movie_info['MovieID']; ?></td>
      <td><?php echo $movie_info['Title']; ?></td>        
-     <td><?php echo $movie_info['Genre']; ?></td>          
+     <!-- <td><?php echo $movie_info['Genre']; ?></td>           -->
      <td><?php echo $movie_info['ReleaseDate']; ?></td>
      <td><?php echo $movie_info['Runtime']; ?></td>        
      <td><?php echo $movie_info['AvgRating']; ?></td>               
      <td>
        <form action="request.php" method="post"> 
-          <input type="submit" value="Update" name="updateBtn" 
+          <input type="submit" value="View" name="viewBtn" 
                  class="btn btn-primary" /> 
           <input type="hidden" name="MovieID" 
                  value="<?php echo $movie_info['MovieID']; ?>" /> 
@@ -177,14 +175,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
      </td>
      <td>
        <form action="request.php" method="post"> 
-          <input type="submit" value="Delete" name="deleteBtn" 
-                 class="btn btn-danger" /> 
-          <input type="hidden" name="reqId" 
+          <input type="submit" value="ADD" name="movieaddBtn" 
+                 class="btn btn-success" /> 
+          <input type="hidden" name="MovieID" 
                  value="<?php echo $movie_info['MovieID']; ?>" /> 
        </form>
      </td>
   </tr>
   <?php if($list_of_reviews!=null && $review_movie_id==$movie_info['MovieID']): ?>
+    <thead>
+      <tr style="background-color:#D6D6D7">
+        <th><b>Review ID</b></th>
+        <th><b>Movie ID</b></th>        
+        <th><b>User ID</b></th> 
+        <th><b>Comment</b></th>
+        <th><b>Rating</b></th>        
+        <th><b>Date</b></th>
+        <th></th> 
+      </tr>
+    </thead>
       <?php foreach ($list_of_reviews as $review_info): ?>
         <tr>
           <td><?php echo $review_info['ReviewID']; ?></td>

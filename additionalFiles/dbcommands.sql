@@ -9,7 +9,7 @@ Create Tables
 /* Create User Table */
 CREATE TABLE User
 (
-    ReviewerID int NOT NULL,
+    ReviewerID int NOT NULL AUTO,
     Username varchar(255) NOT NULL,
     Password varchar(255) NOT NULL,
     PRIMARY KEY (ReviewerID)
@@ -335,17 +335,43 @@ UPDATE MovieData
 SET Genre = (SELECT GenreID FROM Genre WHERE GenreType=MovieData.Genre)
 
 /* Update AvgRating in Movie Table */
-CREATE TRIGGER trg_UpdateAverageRating
-AFTER INSERT OR UPDATE OR DELETE ON Review
-FOR EACH ROW
+CREATE TRIGGER trg_UpdateAverageRating_insert
+AFTER INSERT ON Review
+FOR each ROW
 BEGIN
     UPDATE Movie
-    SET AverageRating = (
+    SET AvgRating = (
         SELECT AVG(Rating)
         FROM Review
         WHERE MovieID = NEW.MovieID
     )
     WHERE MovieID = NEW.MovieID;
+END#
+
+CREATE TRIGGER trg_UpdateAverageRating_delete
+AFTER delete ON Review
+FOR each ROW
+BEGIN
+    UPDATE Movie
+    SET AvgRating = (
+        SELECT AVG(Rating)
+        FROM Review
+        WHERE MovieID = OLD.MovieID
+    )
+    WHERE MovieID = OLD.MovieID;
+END#
+
+CREATE TRIGGER trg_UpdateAverageRating_update
+AFTER update ON Review
+FOR each ROW
+BEGIN
+    UPDATE Movie
+    SET AvgRating = (
+        SELECT AVG(Rating)
+        FROM Review
+        WHERE MovieID = new.MovieID
+    )
+    WHERE MovieID = new.MovieID;
 END#
 
 UPDATE User

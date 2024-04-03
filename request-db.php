@@ -1,36 +1,36 @@
 <?php
-// function addRequests($reqDate, $roomNumber, $reqBy, $repairDesc, $reqPriority)
-// {
-//    global $db;   
-//    $reqDate = date('Y-m-d');
+function addReview($movieID, $userID, $comment, $rating, $date)
+{
+   global $db;   
+   // $reqDate = date('Y-m-d');
       
-//    $query = "INSERT INTO requests (reqDate, roomNumber, reqBy, repairDesc, reqPriority) VALUES (:reqDate, :roomNumber, :reqBy, :repairDesc, :reqPriority)";  
+   $query = "INSERT INTO Review (MovieID, UserID, Comment, Rating, ReviewDate) VALUES (:movieID, :userID, :comment, :rating, :date)";  
    
-//    try { 
+   try { 
 
-//       // prepared statement
-//       // pre-compile
-//       $statement = $db->prepare($query);
+      // prepared statement
+      // pre-compile
+      $statement = $db->prepare($query);
 
-//       // fill in the value
-//       $statement->bindValue(':reqDate', $reqDate);
-//       $statement->bindValue(':roomNumber', $roomNumber);
-//       $statement->bindValue(':reqBy',$reqBy);
-//       $statement->bindValue(':repairDesc', $repairDesc);
-//       $statement->bindValue(':reqPriority', $reqPriority);
+      // fill in the value
+      $statement->bindValue(':movieID', $movieID);
+      $statement->bindValue(':userID', $userID);
+      $statement->bindValue(':comment',$comment);
+      $statement->bindValue(':rating', $rating);
+      $statement->bindValue(':date', $date);
 
-//       // exe
-//       $statement->execute();
-//       $statement->closeCursor();
-//    } catch (PDOException $e)
-//    {
-//       $e->getMessage();
-//    } catch (Exception $e) 
-//    {
-//       $e->getMessage();
-//    }
+      // exe
+      $statement->execute();
+      $statement->closeCursor();
+   } catch (PDOException $e)
+   {
+      $e->getMessage();
+   } catch (Exception $e) 
+   {
+      $e->getMessage();
+   }
 
-// }
+}
 
 function getAllMovies()
 {
