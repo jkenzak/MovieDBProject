@@ -13,10 +13,10 @@
                otherwise, display sign up and log in buttons -->
           <?php if (!isset($_SESSION['username'])) { ?>              
             <li class="nav-item">
-              <a class="nav-link" href="register.php">Join our community</a>
+              <a class="nav-link" href="signup.php">Sign up</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="signin.php">Sign in</a>
+              <a class="nav-link" href="login.php">Sign in</a>
             </li>              
           <?php  } else { ?>                    
             <li class="nav-item">                  

@@ -112,14 +112,19 @@ function loginUser($username, $password) {
        $statement->closeCursor();
 
        if ($user && password_verify($password, $user['Password'])) {
-           // Start the session and set session variables
-           session_start();
+           if (!isset($_SESSION['loggedin'])) {  // Check if session has already been started
+               session_start();
+           }
            $_SESSION['loggedin'] = true;
            $_SESSION['username'] = $username;
            return true;
+       } else {
+           return false; // If password doesn't match or user doesn't exist
        }
-      } catch (PDOException $e) {
-     }
+   } catch (PDOException $e) {
+       echo 'PDOException: ' . $e->getMessage();
+       return false;
+   }
 }
 
 
