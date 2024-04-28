@@ -205,9 +205,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   <?php if($list_of_reviews!=null && $review_movie_id==$movie_info['MovieID']): ?>
     <thead>
       <tr style="background-color:#D6D6D7">
-        <th><b>Review ID</b></th>
-        <th><b>Movie ID</b></th>        
-        <th><b>User ID</b></th> 
+        <th><b>Author Name</b></th>
+        <th><b>Type</b></th>        
+        <th><b>Publisher</b></th> 
         <th><b>Comment</b></th>
         <th><b>Rating</b></th>        
         <th><b>Date</b></th>
@@ -216,14 +216,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     </thead>
       <?php foreach ($list_of_reviews as $review_info): ?>
         <tr>
-          <td><?php echo $review_info['ReviewID']; ?></td>
-          <td><?php echo $review_info['MovieID']; ?></td>        
-          <td><?php echo $review_info['UserID']; ?></td>          
+          <td><?php echo findAuthorName($review_info['ReviewID'], $review_info['UserID']); ?></td>
+          <?php $usertype = getUserType($review_info['ReviewID']); ?>
+          <?php if($usertype): ?>
+            <td>Critic</td>
+            <td><?php echo getPublisher($review_info['UserID']); ?></td>
+          <?php else: ?>
+            <td>User</td>
+            <td>N/A</td>
+          <?php endif; ?>                
           <td><?php echo $review_info['Comment']; ?></td>
           <td><?php echo $review_info['Rating']; ?></td>        
           <td><?php echo $review_info['ReviewDate']; ?></td> 
         </tr>
       <?php endforeach; ?>
+      <tr style="background-color:#D6D6D7">
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
   <?php endif; ?>
 <?php endforeach; ?>  
 

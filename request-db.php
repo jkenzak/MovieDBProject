@@ -127,6 +127,57 @@ function loginUser($username, $password) {
    }
 }
 
+function getUserType($reviewID){
+   global $db;
+
+   $query = "SELECT is_critic FROM Review WHERE ReviewID = :reviewid";
+   $statement = $db->prepare($query);
+   $statement->bindValue(':reviewid', $reviewID);
+   $statement->execute();
+   $is_critic = $statement->fetch();
+   $statement->closeCursor();
+
+   return $is_critic[0];
+}
+
+function findAuthorName($reviewID, $userID){
+   global $db;
+
+   $is_critic = getUserType($reviewID);
+
+   if($is_critic){
+      $query = "SELECT CriticName FROM Critic WHERE ReviewerID = :userid";
+      $statement = $db->prepare($query);
+      $statement->bindValue(':userid', $userID);
+      $statement->execute();
+      $result = $statement->fetch();
+      $statement->closeCursor();
+   }
+   else{
+      $query = "SELECT Username FROM User WHERE ReviewerID=:userid";
+      $statement = $db->prepare($query);
+      $statement->bindValue(':userid', $userID);
+      $statement->execute();
+      $result = $statement->fetch();
+      $statement->closeCursor();
+   }
+   return $result[0];
+
+}
+
+function getPublisher($criticID){
+   global $db;
+
+   $query = "SELECT Publisher FROM Critic WHERE ReviewerID = :criticid";
+   $statement = $db->prepare($query);
+   $statement->bindValue(':criticid', $criticID);
+   $statement->execute();
+   $publisher = $statement->fetch();
+   $statement->closeCursor();
+
+   return $publisher[0];
+}
+
 
 // function updateRequest($reqId, $reqDate, $roomNumber, $reqBy, $repairDesc, $reqPriority)
 // {
