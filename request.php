@@ -13,9 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
   if (!empty($_POST['addBtn']))
   {
-      addReview($_POST['movieID'], $_POST['userID'], $_POST['comment'], $_POST['rating'], $_POST['date']);
-      $list_of_reviews = getReviewsByMovieId($_POST['movieID']);
-      $review_movie_id = $_POST['movieID'];
+      addReview($_POST['MovieID'], $_POST['userID'], $_POST['comment'], $_POST['rating'], $_POST['Date']);
+      $list_of_reviews = getReviewsByMovieId($_POST['MovieID']);
+      $review_movie_id = $_POST['MovieID'];
       $list_of_movies = getAllMovies();
   }
   else if (!empty($_POST['viewBtn']))
@@ -93,15 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   <form method="post" action="<?php $_SERVER['PHP_SELF'] ?>" onsubmit="return validateInput()">
     <table style="width:98%">
       <tr>
-        <td width="50%">
-          <div class='mb-3'>
-            Movie ID
-            <input type='text' class='form-control' 
-                   id='movieID' name='movieID' 
-                   placeholder='' 
-                   value="" />
-          </div>
-        </td>
         <td>
           <div class='mb-3'>
             User ID
@@ -123,13 +114,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       <tr>
         <td colspan=2>
           <div class="mb-3">
-            Rating
+            <!-- Rating
             <input type='text' class='form-control' id='rating' name='rating'
-            value="" />
+            value="" /> -->
+            <label for="rating">Rating:</label>
+            <select name="rating" id="rating">
+              <option value=10>10</option>
+              <option value=9.75>9.75</option>
+              <option value=9.5>9.5</option>
+              <option value=9.25>9.25</option>
+              <option value=9>9.0</option>
+              <option value=8.75>8.75</option>
+              <option value=8.5>8.5</option>
+              <option value=8.25>8.25</option>
+              <option value=8.0>8.0</option>
+              <option value=7.75>7.75</option>
+              <option value=7.5>7.5</option>
+              <option value=7.25>7.25</option>
+              <option value=7>7.0</option>
+              <option value=6.75>6.75</option>
+              <option value=6.5>6.5</option>
+              <option value=6.25>6.25</option>
+              <option value=6.0>6.0</option>
+              <option value=5.75>5.75</option>
+              <option value=5.5>5.5</option>
+              <option value=5.25>5.25</option>
+              <option value=5>5.0</option>
+              <option value=4.75>4.75</option>
+              <option value=4.5>4.5</option>
+              <option value=4.25>4.25</option>
+              <option value=4>4.0</option>
+              <option value=3.75>3.75</option>
+              <option value=3.5>3.5</option>
+              <option value=3.25>3.25</option>
+              <option value=3>3.0</option>
+              <option value=2.75>2.75</option>
+              <option value=2.5>2.5</option>
+              <option value=2.25>2.25</option>
+              <option value=2>2.0</option>
+              <option value=1.75>1.75</option>
+              <option value=1.5>1.5</option>
+              <option value=1.25>1.25</option>
+              <option value=1>1.0</option>
+              <option value=0.75>0.75</option>
+              <option value=0.5>0.5</option>
+              <option value=0.25>0.25</option>
+              <option value=0>0</option>
+
         </div>
         </td>
       </tr>
-      <tr>
+      <!-- <tr>
         <td colspan=2>
           <div class='mb-3'>
             Date
@@ -137,18 +172,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             value="" />
           </div>
         </td>
-      </tr>
+      </tr> -->
     </table>
 
     <div class="row g-3 mx-auto">    
       <div class="col-4 d-grid ">
       <input type="submit" value="Add" id="addBtn" name="addBtn" class="btn btn-dark"
-           title="Submit a maintenance request" />                  
+           title="Submit new review" />
+      <input type="hidden" name="MovieID" value="<?php echo $_POST['MovieID']; ?>" /> 
+      <input type="hidden" name="Date" value="<?php date_default_timezone_set("America/New_York"); echo date("Y-m-d"); ?>" />                  
       </div>	    
       <div class="col-4 d-grid ">
       <input type="submit" value="Confirm update" id="cofmBtn" name="cofmBtn" class="btn btn-primary"
-           title="Update a maintenance request" />      
-      <input type="hidden" value="<?= $_POST['reqId'] ?>" name="cofm_reqId" />      
+           title="Update review" />         
       </div>	    
       <div class="col-4 d-grid">
         <input type="reset" value="Clear form" name="clearBtn" id="clearBtn" class="btn btn-secondary" />
@@ -168,7 +204,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
   <thead>
   <tr style="background-color:#B0B0B0">
-    <th><b>Movie ID</b></th>
     <th><b>Title</b></th>        
     <th><b>Release Date</b></th> 
     <th><b>Runtime</b></th>
@@ -179,12 +214,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   </thead>
   <?php foreach ($list_of_movies as $movie_info): ?>
   <tr>
-     <td><?php echo $movie_info['MovieID']; ?></td>
      <td><?php echo $movie_info['Title']; ?></td>        
      <!-- <td><?php echo $movie_info['Genre']; ?></td>           -->
      <td><?php echo $movie_info['ReleaseDate']; ?></td>
-     <td><?php echo $movie_info['Runtime']; ?></td>        
-     <td><?php echo $movie_info['AvgRating']; ?></td>               
+     <td><?php echo $movie_info['Runtime']; ?></td>   
+     <?php if(is_null($movie_info['AvgRating'])): ?>
+        <td>N/A</td>
+     <?php else: ?>     
+        <td><?php echo round($movie_info['AvgRating'], 2); ?></td> 
+     <?php endif; ?>              
      <td>
        <form action="request.php" method="post"> 
           <input type="submit" value="View" name="viewBtn" 
