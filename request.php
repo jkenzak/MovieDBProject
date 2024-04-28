@@ -26,7 +26,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   else if (!empty($_POST['movieaddBtn']))
   {
     $add_form = True;
-  }   
+  }
+
+  //Delete Review Button
+  else if (!empty($_POST['deleteReviewBtn']))
+  {
+      deleteReview($_POST['ReviewID']);
+      $list_of_reviews = getReviewsByMovieId($_POST['MovieID']);
+      $review_movie_id = $_POST['MovieID'];
+      $list_of_movies = getAllMovies();
+  }
+
+  //Update Review Button
+  else if (!empty($_POST['updateReviewBtn']))
+  {
+      updateReview($_POST['ReviewID'], $_POST['movieID'], $_POST['userID'], $_POST['comment'], $_POST['rating'], $_POST['date']);
+      $list_of_reviews = getReviewsByMovieId($_POST['MovieID']);
+      $review_movie_id = $_POST['MovieID'];
+      $list_of_movies = getAllMovies();
+  }
+
+
   // else if (!empty($_POST['cofmBtn']))
   // {
   //    updateRequest($_POST['cofm_reqId'], $_POST['requestedDate'], $_POST['roomNo'], $_POST['requestedBy'], $_POST['requestDesc'], $_POST['priority_option']); 
