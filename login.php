@@ -34,17 +34,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
 </head>
 <body>
 <?php include("header.php"); ?>
-<div class="w3-container w3-margin-top">
-    <h2>Login</h2>
+<div class="w3-container w3-margin-top" style="max-width: 400px; margin: auto;">
+    <h1 class="w3-center">MovieReviews</h1> <!-- Title added here -->
+    <h2 class="w3-center">Login</h2>
     <?php if (!empty($message)): ?>
-        <p class="w3-text-red"><?php echo $message; ?></p>
+        <p class="w3-text-red w3-center"><?php echo $message; ?></p>
     <?php endif; ?>
-    <form method="post" action="login.php">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required class="w3-input w3-border">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required class="w3-input w3-border">
-        <button type="submit" name="login" class="w3-btn w3-blue w3-margin-top">Login</button>
+    <form method="post" action="login.php" class="w3-container w3-card-4 w3-light-grey w3-text-blue w3-margin">
+        <div class="w3-row w3-section">
+            <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-user"></i></div>
+            <div class="w3-rest">
+                <input class="w3-input w3-border" name="username" id="username" type="text" placeholder="Username" required>
+            </div>
+        </div>
+        <div class="w3-row w3-section">
+            <div class="w3-col" style="width:50px"><i class="w3-xxlarge fa fa-lock"></i></div>
+            <div class="w3-rest">
+                <input class="w3-input w3-border" name="password" id="password" type="password" placeholder="Password" required>
+            </div>
+        </div>
+        <button class="w3-button w3-block w3-section w3-blue w3-ripple w3-padding">Login</button>
     </form>
 </div>
 </body>
