@@ -57,6 +57,72 @@ function getReviewsByMovieId($id)
    return $result;
 }
 
+//delete review
+function deleteReview($reviewID) {
+   global $db;
+
+   $query = "DELETE FROM Review WHERE ReviewID = :reviewID";
+   $statement = $db->prepare($query);
+   $statement->bindValue(':reviewID', $reviewID);
+   $statement->execute();
+   $statement->closeCursor();
+}
+
+//update review
+function updateReview($reviewID, $movieID, $userID, $comment, $rating, $date) {
+    global $db;
+    $query = "UPDATE reviews SET MovieID = :movieID, UserID = :userID, Comment = :comment, Rating = :rating, ReviewDate = :date WHERE ReviewID = :reviewID";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':reviewID', $reviewID);
+    $statement->bindValue(':movieID', $movieID);
+    $statement->bindValue(':userID', $userID);
+    $statement->bindValue(':comment', $comment);
+    $statement->bindValue(':rating', $rating);
+    $statement->bindValue(':date', $date);
+    $statement->execute();
+    $statement->closeCursor();
+}
+
+function registerUser($username, $password) {
+   global $db;
+   $query = "INSERT INTO User (Username, Password) VALUES (:username, :password)";
+
+   try {
+       $statement = $db->prepare($query);
+       $statement->bindValue(':username', $username);
+       $statement->bindValue(':password', $password);
+       $statement->execute();
+       $statement->closeCursor();
+       return true;
+   } catch (PDOException $e) {
+       echo 'PDOException: ' . $e->getMessage();
+       return false;
+   }
+}
+
+function loginUser($username, $password) {
+   global $db;
+   $query = "SELECT Password FROM User WHERE Username = :username";
+
+   try {
+       $statement = $db->prepare($query);
+       $statement->bindValue(':username', $username);
+       $statement->execute();
+       $user = $statement->fetch(PDO::FETCH_ASSOC);
+       $statement->closeCursor();
+
+       if ($user && password_verify($password, $user['Password'])) {
+           // Start the session and set session variables
+           session_start();
+           $_SESSION['loggedin'] = true;
+           $_SESSION['username'] = $username;
+           return true;
+       }
+      } catch (PDOException $e) {
+     }
+}
+
+
 // function updateRequest($reqId, $reqDate, $roomNumber, $reqBy, $repairDesc, $reqPriority)
 // {
 //    global $db;
@@ -90,5 +156,8 @@ function getReviewsByMovieId($id)
 //    $statement->closeCursor();
     
 // }
+
+
+
 
 ?>

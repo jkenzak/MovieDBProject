@@ -4,9 +4,9 @@
 /** S24, PHP (on Google Standard App Engine) connect to MySQL instance (GCP) **/
 $username = 'root';                       // or your username
 $password = 'Databases2024';     
-$host = 'movie-review-app-418315:us-east4:movie-db';       // e.g., 'cs4750:us-east4:db-demo'; 
+$host = '35.186.167.244';       // e.g., 'cs4750:us-east4:db-demo'; 
 $dbname = 'movie';           // e.g., 'guestbook';
-$dsn = "mysql:unix_socket=/cloudsql/movie-review-app-418315:us-east4:movie-db;dbname=movie";
+$dsn = "mysql:host=35.186.167.244;dbname=movie";
       // e.g., "mysql:unix_socket=/cloudsql/cs4750:us-east4:db-demo;dbname=guestbook";
 
 // to get instance connection name, go to GCP SQL overview page
