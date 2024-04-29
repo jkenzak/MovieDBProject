@@ -1,24 +1,65 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>Login</title>
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-	</head>
-	<body>
-		<div class="login">
-			<h1>Login</h1>
-			<form action="authenticate.php" method="post">
-				<label for="username">
-					<i class="fas fa-user"></i>
-				</label>
-				<input type="text" name="username" placeholder="Username" id="username" required>
-				<label for="password">
-					<i class="fas fa-lock"></i>
-				</label>
-				<input type="password" name="password" placeholder="Password" id="password" required>
-				<input type="submit" value="Login">
-			</form>
-		</div>
-	</body>
+<head>
+    <meta charset="utf-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .login {
+            max-width: 400px;
+            margin: auto;
+            margin-top: 50px;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="w3-container w3-margin-top login">
+        <h1 class="w3-center">Login</h1>
+        <form method="post" action="authenticate.php" class="w3-container w3-card-4 w3-light-grey w3-text-blue w3-margin">
+            <div class="w3-row w3-section">
+                <div class="w3-col" style="width:50px"><i class="fas fa-user w3-xxlarge"></i></div>
+                <div class="w3-rest">
+                    <input type="text" name="username" placeholder="Username" id="username" required>
+                </div>
+            </div>
+            <div class="w3-row w3-section">
+                <div class="w3-col" style="width:50px"><i class="fas fa-lock w3-xxlarge"></i></div>
+                <div class="w3-rest">
+                    <input type="password" name="password" placeholder="Password" id="password" required>
+                </div>
+            </div>
+            <button type="submit" class="w3-button w3-block w3-section w3-blue w3-ripple w3-padding">Login</button>
+        </form>
+    </div>
+</body>
 </html>
