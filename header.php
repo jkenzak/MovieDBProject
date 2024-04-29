@@ -13,7 +13,7 @@
             <li class="nav-item">
               <a class="nav-link" href="signup.php">Sign up</a>
             </li>
-            <li class="nav-item">
+            <li>
               <a class="nav-link" href="login.html">Sign in</a>
             </li>              
           <?php } else { ?> 

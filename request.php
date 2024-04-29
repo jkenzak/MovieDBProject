@@ -43,11 +43,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   //Update Review Button
   else if (!empty($_POST['updateReviewBtn']))
   {
-      updateReview($_POST['ReviewID'], $_POST['movieID'], $_POST['userID'], $_POST['comment'], $_POST['rating'], $_POST['date']);
-      $list_of_reviews = getReviewsByMovieId($_POST['MovieID']);
-      $review_movie_id = $_POST['MovieID'];
-      $list_of_movies = getAllMovies();
+      $update_form = $_POST['update'];
   }
+
+  else if (!empty($_POST['cofmBtn']))
+  {
+    updateReview($_POST['ReviewID'], $_POST['MovieID'], $_POST['comment'], $_POST['rating'], $_POST['Date']);
+    $list_of_reviews = getReviewsByMovieId($_POST['MovieID']);
+    $review_movie_id = $_POST['MovieID'];
+    $list_of_movies = getAllMovies();
+  }
+
 
   //Function to organize movies by rating
   else if (!empty($_POST['sortRatingBtn']))
@@ -103,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   </div>
   
  
-<?php if($add_form): ?>
+<?php if($add_form or $update_form): ?>
   <form method="post" action="<?php $_SERVER['PHP_SELF'] ?>" onsubmit="return validateInput()">
     <table style="width:98%">
       <tr>
@@ -112,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             Comment 
             <input type='text' class='form-control' id='comment' name='comment'
                    placeholder='Enter your comment'
-                   value="" />
+                   value="<?php if($update_form){echo $_POST['Comment'];} ?>" />
           </div>
         </td>
       </tr>
@@ -123,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             <input type='text' class='form-control' id='rating' name='rating'
             value="" /> -->
             <label for="rating">Rating:</label>
-            <select name="rating" id="rating">
+            <select name="rating" id="rating" selected="<?php if($update_form){echo $_POST['rating'];} ?>">
               <option value=10>10</option>
               <option value=9.75>9.75</option>
               <option value=9.5>9.5</option>
@@ -180,6 +186,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       <input type="hidden" name="userID" value="<?php echo $_SESSION['id'] ?>" />
       </div>	    
       <div class="col-4 d-grid ">
+      <?php if($update_form): ?>
+        <input type="hidden" name="ReviewID" value="<?php echo $_POST['ReviewID'] ?>" />
+        <input type="hidden" name="movieID" value="<?php echo $_POST['movieID']; ?>" /> 
+        <input type="hidden" name="Date" value="<?php date_default_timezone_set("America/New_York"); echo date("Y-m-d"); ?>" />                  
+        <input type="hidden" name="userID" value="<?php echo $_SESSION['id'] ?>" />
+      <?php endif; ?>
       <input type="submit" value="Confirm update" id="cofmBtn" name="cofmBtn" class="btn btn-primary"
            title="Update review" />         
       </div>	    
@@ -287,18 +299,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
           <td><?php echo $review_info['ReviewDate']; ?></td> 
           <td>
             <form action="request.php" method="post"> 
-              <textarea name="comment" required><?php echo $review_info['Comment']; ?></textarea>
+              <input type="hidden" name="Comment" value="<?php echo $review_info['Comment']; ?>" />
               <input type="hidden" name="ReviewID" value="<?php echo $review_info['ReviewID']; ?>" /> 
               <input type="hidden" name="movieID" value="<?php echo $review_info['MovieID']; ?>" />
               <input type="hidden" name="rating" value="<?php echo $review_info['Rating']; ?>" />
               <input type="hidden" name="date" value="<?php echo $review_info['ReviewDate']; ?>" />
-              <input type="submit" value="Update Review" id="updateReviewBtn" name="updateReviewBtn" class="btn btn-warning" />
-            </form>
+              <input type="hidden" name="update" value=1 />
+              <?php if($_SESSION['id']): ?>
+                <input type="submit" value="Update Review" id="updateReviewBtn" name="updateReviewBtn" class="btn btn-warning" />
+              <?php else: ?>
+                <input type="submit" value="Update Review" id="updateReviewBtn" name="updateReviewBtn" class="btn btn-warning" disabled/>
+              <?php endif; ?>
+              </form>
           </td>
           <td>
-            <form action="request.php" method="post"> 
-              <input type="submit" value="Delete Review" id="deleteReviewBtn" name="deleteReviewBtn" class="btn btn-danger" />
-              <input type="hidden" name="ReviewID" value="<?php echo $review_info['ReviewID']; ?>" /> 
+            <form action="request.php" method="post">
+              <?php if($_SESSION['id']): ?> 
+                <input type="submit" value="Delete Review" id="deleteReviewBtn" name="deleteReviewBtn" class="btn btn-danger" />
+              <?php else: ?>
+                <input type="submit" value="Delete Review" id="deleteReviewBtn" name="deleteReviewBtn" class="btn btn-danger" disabled/>
+              <?php endif; ?>
+                <input type="hidden" name="ReviewID" value="<?php echo $review_info['ReviewID']; ?>" /> 
             </form>
           </td>
         </tr>

@@ -98,14 +98,12 @@ function updateReview($reviewID, $movieID, $comment, $rating, $date) {
     $statement->closeCursor();
 
     if ($result) {
-        $query = "UPDATE reviews SET MovieID = :movieID, UserID = :userID, Comment = :comment, Rating = :rating, ReviewDate = :date WHERE ReviewID = :reviewID";
+        $query = "UPDATE Review SET Comment = :comment, Rating = :rating, ReviewDate = :d WHERE ReviewID = :reviewID";
         $statement = $db->prepare($query);
         $statement->bindValue(':reviewID', $reviewID);
-        $statement->bindValue(':movieID', $movieID);
-        $statement->bindValue(':userID', $userID);
         $statement->bindValue(':comment', $comment);
         $statement->bindValue(':rating', $rating);
-        $statement->bindValue(':date', $date);
+        $statement->bindValue(':d', $date);
         $statement->execute();
         $statement->closeCursor();
     }
