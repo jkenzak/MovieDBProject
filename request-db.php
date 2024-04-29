@@ -1,4 +1,7 @@
 <?php
+
+session_start();
+
 function addReview($movieID, $userID, $comment, $rating, $date)
 {
    global $db;   
@@ -148,9 +151,9 @@ function loginUser($username, $password) {
        $statement->closeCursor();
 
        if ($password == $user['Password']) {
-           if (!isset($_SESSION['loggedin'])) { 
-               session_start();
-           }
+         //   if (!isset($_SESSION['loggedin'])) { 
+         //       session_start();
+         //   }
            $_SESSION['loggedin'] = true;
            $_SESSION['username'] = $username;
            $_SESSION['userID'] = $user['UserID'];
@@ -224,6 +227,20 @@ function searchMovie($searchfor){
 
    $statement = $db->prepare($query);
    $statement->bindValue(':searchfor', $searchfor);
+   $statement->execute();
+   $result = $statement->fetchAll();
+   $statement->closeCursor();
+
+   return $result;
+}
+
+function getGenre($movieid){
+   global $db;
+
+   $query = "select genre from Genre where MovieID=:movieid";
+
+   $statement = $db->prepare($query);
+   $statement->bindValue(':movieid', $movieid);
    $statement->execute();
    $result = $statement->fetchAll();
    $statement->closeCursor();

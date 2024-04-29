@@ -2,6 +2,8 @@
 require("connect-db.php");
 require("request-db.php");
 
+session_start();
+
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     $username = $_POST['username'];
