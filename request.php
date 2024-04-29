@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   //Delete Review Button
   else if (!empty($_POST['deleteReviewBtn']))
   {
-      deleteReview($_POST['ReviewID']);
+      deleteReview($_POST['ReviewID'], $_POST['userID']);
       $list_of_reviews = getReviewsByMovieId($_POST['MovieID']);
       $review_movie_id = $_POST['MovieID'];
       $list_of_movies = getAllMovies();
@@ -44,6 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       $list_of_reviews = getReviewsByMovieId($_POST['MovieID']);
       $review_movie_id = $_POST['MovieID'];
       $list_of_movies = getAllMovies();
+  }
+
+  //Function to organize movies by rating
+  else if (!empty($_POST['sortRatingBtn']))
+  {
+      $list_of_movies = getMoviesByRating();
   }
 
 
@@ -200,6 +206,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <!-- <hr/> -->
 <div class="container">
 <h3>Movie List</h3>
+  <form action="request.php" method="post">
+    <input type="hidden" name="sortRatingBtn" value="1">
+    <input type="submit" value="Sort by Ratings" class="btn btn-primary">
+  </form>
 <div class="row justify-content-center">  
 <table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
   <thead>
@@ -266,6 +276,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
           <td><?php echo $review_info['Comment']; ?></td>
           <td><?php echo $review_info['Rating']; ?></td>        
           <td><?php echo $review_info['ReviewDate']; ?></td> 
+          <td>
+            <form action="request.php" method="post"> 
+              <input type="submit" value="Update Review" id="updateReviewBtn" name="updateReviewBtn" class="btn btn-warning" />
+              <input type="hidden" name="ReviewID" value="<?php echo $review_info['ReviewID']; ?>" /> 
+            </form>
+          </td>
+          <td>
+            <form action="request.php" method="post"> 
+              <input type="submit" value="Delete Review" id="deleteReviewBtn" name="deleteReviewBtn" class="btn btn-danger" />
+              <input type="hidden" name="ReviewID" value="<?php echo $review_info['ReviewID']; ?>" /> 
+            </form>
+          </td>
         </tr>
       <?php endforeach; ?>
       <tr style="background-color:#D6D6D7">
