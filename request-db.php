@@ -141,7 +141,7 @@ function registerUser($username, $password) {
 
 function loginUser($username, $password) {
    global $db;
-   $query = "SELECT Password FROM User WHERE Username = :username";
+   $query = "SELECT `Password` FROM User WHERE Username = :username";
 
    try {
        $statement = $db->prepare($query);
