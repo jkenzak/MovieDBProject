@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
 <body>
 <?php include("header.php"); ?>
 <div class="w3-container w3-margin-top" style="max-width: 400px; margin: auto;">
-    <h1 class="w3-center">MovieReviews</h1> 
+    <h1 class="w3-center">Movie Reviews</h1> 
     <h2 class="w3-center">Login</h2>
     <?php if (!empty($message)): ?>
         <p class="w3-text-red w3-center"><?php echo $message; ?></p>
