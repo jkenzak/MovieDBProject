@@ -214,6 +214,22 @@ function getPublisher($criticID){
    return $publisher[0];
 }
 
+function searchMovie($searchfor){
+   global $db;
+
+   $searchfor = "%".$searchfor."%";
+
+   $query = "select * from Movie where UPPER(Title) LIKE UPPER(:searchfor)";
+
+   $statement = $db->prepare($query);
+   $statement->bindValue(':searchfor', $searchfor);
+   $statement->execute();
+   $result = $statement->fetchAll();
+   $statement->closeCursor();
+
+   return $result;
+}
+
 
 // function updateRequest($reqId, $reqDate, $roomNumber, $reqBy, $repairDesc, $reqPriority)
 // {

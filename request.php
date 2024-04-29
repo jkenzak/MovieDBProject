@@ -52,6 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       $list_of_movies = getMoviesByRating();
   }
 
+  else if (!empty($_POST['searchBtn']))
+  {
+      $list_of_movies = searchMovie($_POST['searchfor']);
+  }
+
 
   // else if (!empty($_POST['cofmBtn']))
   // {
@@ -205,11 +210,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 <!-- <hr/> -->
 <div class="container">
-<h3>Movie List</h3>
-  <form action="request.php" method="post">
-    <input type="hidden" name="sortRatingBtn" value="1">
-    <input type="submit" value="Sort by Ratings" class="btn btn-primary">
-  </form>
+  <h3>Movie List</h3>
+  <table class="w3-table center" style="width:100%">
+    <tr>
+      <td>
+        <form action="request.php" method="post">
+          <input type="text" name="searchfor" style="width:500px" />
+          <input type="hidden" name="searchBtn" value="1" />
+          <input type="submit" value="Search" class="btn btn-primary"/>
+        </form>
+      </td>
+      <td>
+        <form action="request.php" method="post">
+          <input type="hidden" name="sortRatingBtn" value="1">
+          <input type="submit" value="Sort by Ratings" class="btn btn-primary">
+        </form>
+      </td>
+   </table>
 <div class="row justify-content-center">  
 <table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
   <thead>
