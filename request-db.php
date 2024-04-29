@@ -61,8 +61,10 @@ function getReviewsByMovieId($id)
 }
 
 //delete review
-function deleteReview($reviewID, $userID) {
+function deleteReview($reviewID) {
    global $db;
+
+   $userID = $_SESSION['id'];
 
    $query = "SELECT * FROM Review WHERE ReviewID = :reviewID AND UserID = :userID";
    $statement = $db->prepare($query);
@@ -82,8 +84,10 @@ function deleteReview($reviewID, $userID) {
 }
 
 //update review
-function updateReview($reviewID, $movieID, $userID, $comment, $rating, $date) {
+function updateReview($reviewID, $movieID, $comment, $rating, $date) {
     global $db;
+
+    $userID = $_SESSION['id'];
 
     $query = "SELECT * FROM Review WHERE ReviewID = :reviewID AND UserID = :userID";
     $statement = $db->prepare($query);
