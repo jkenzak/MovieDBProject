@@ -287,8 +287,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
           <td><?php echo $review_info['ReviewDate']; ?></td> 
           <td>
             <form action="request.php" method="post"> 
-              <input type="submit" value="Update Review" id="updateReviewBtn" name="updateReviewBtn" class="btn btn-warning" />
+              <textarea name="comment" required><?php echo $review_info['Comment']; ?></textarea>
               <input type="hidden" name="ReviewID" value="<?php echo $review_info['ReviewID']; ?>" /> 
+              <input type="hidden" name="movieID" value="<?php echo $review_info['MovieID']; ?>" />
+              <input type="hidden" name="rating" value="<?php echo $review_info['Rating']; ?>" />
+              <input type="hidden" name="date" value="<?php echo $review_info['ReviewDate']; ?>" />
+              <input type="submit" value="Update Review" id="updateReviewBtn" name="updateReviewBtn" class="btn btn-warning" />
             </form>
           </td>
           <td>
