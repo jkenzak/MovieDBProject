@@ -107,18 +107,16 @@ function updateReview($reviewID, $movieID, $userID, $comment, $rating, $date) {
 //organize movies by rating
 function getMoviesByRating()
 {
-   global $db;
-   $query = "SELECT Movie.MovieID, Movie.Title, AVG(Review.Rating) as AverageRating
-             FROM Movie
-             LEFT JOIN Review ON Movie.MovieID = Review.MovieID
-             GROUP BY Movie.MovieID, Movie.Title
-             ORDER BY AverageRating DESC"; 
-   $statement = $db->prepare($query);
-   $statement->execute();
-   $result = $statement->fetchAll(); 
-   $statement->closeCursor();
-
-   return $result;
+   {
+      global $db;
+      $query = "select * from Movie order by AvgRating DESC";    
+      $statement = $db->prepare($query);
+      $statement->execute();
+      $result = $statement->fetchAll(); 
+      $statement->closeCursor();
+   
+      return $result;
+   }
 }
 
 function registerUser($username, $password) {
