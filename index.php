@@ -15,6 +15,12 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
    case '/signout.php':
         require 'signout.php';
         break;
+   case '/login.html':
+         require 'login.html';
+         break;
+   case '/authenticate.php':
+         require 'authenticate.php';
+         break;
    default:
       http_response_code(404);
       exit('Not Found');
