@@ -33,17 +33,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 </head>
 <body>
 <?php include("header.php"); ?>
-<div class="w3-container w3-margin-top">
-    <h2>Sign Up</h2>
+<div class="w3-container w3-margin-top" style="max-width: 400px; margin: auto;">
+    <h1 class="w3-center">MovieReviews</h1> 
+    <h2 class="w3-center">Sign Up</h2>
     <?php if (!empty($message)): ?>
-        <p class="w3-text-red"><?php echo $message; ?></p>
+        <p class="w3-text-red w3-center"><?php echo $message; ?></p>
     <?php endif; ?>
-    <form method="post" action="signup.php">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required class="w3-input w3-border">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required class="w3-input w3-border">
-        <button type="submit" name="register" class="w3-btn w3-blue w3-margin-top">Register</button>
+    <form method="post" action="signup.php" class="w3-container w3-card-4 w3-light-grey w3-text-blue w3-margin">
+        <div class="w3-row w3-section">
+            <div class="w3-rest">
+                <input class="w3-input w3-border" name="username" id="username" type="text" placeholder="Username" required>
+            </div>
+        </div>
+        <div class="w3-row w3-section">
+            <div class="w3-rest">
+                <input class="w3-input w3-border" name="password" id="password" type="password" placeholder="Password" required>
+            </div>
+        </div>
+        <button class="w3-button w3-block w3-section w3-blue w3-ripple w3-padding">Register</button>
     </form>
 </div>
 </body>
