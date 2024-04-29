@@ -153,6 +153,7 @@ function loginUser($username, $password) {
            }
            $_SESSION['loggedin'] = true;
            $_SESSION['username'] = $username;
+           $_SESSION['userID'] = $user['UserID'];
            return true;
        } else {
            return false;
