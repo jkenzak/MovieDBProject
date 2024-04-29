@@ -9,6 +9,7 @@ require("request-db.php");
 session_start();
 
 $list_of_movies = getAllMovies();
+
 $add_form = False;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
