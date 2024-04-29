@@ -9,14 +9,17 @@
       </button>
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav ms-auto">
-          <?php if (!isset($_SESSION['username'])) { ?>              
+          <?php if (!isset($_SESSION['name'])) { ?>              
             <li class="nav-item">
               <a class="nav-link" href="signup.php">Sign up</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="login.php">Sign in</a>
+              <a class="nav-link" href="login.html">Sign in</a>
             </li>              
-          <?php } else { ?>                    
+          <?php } else { ?> 
+            <li class="nav-item">
+              <p><?php $username = $_SESSION['name']; echo "Hello, $username!"; ?></p>
+            </li>                   
             <li class="nav-item">
               <a class="nav-link" href="signout.php">Sign out</a>
             </li>

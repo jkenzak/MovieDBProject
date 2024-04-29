@@ -107,15 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   <form method="post" action="<?php $_SERVER['PHP_SELF'] ?>" onsubmit="return validateInput()">
     <table style="width:98%">
       <tr>
-        <td>
-          <div class='mb-3'>
-            User ID
-            <input type='text' class='form-control' id='userID' name='userID' 
-            value="" />
-          </div>
-        </td>
-      </tr>
-      <tr>
         <td colspan=2>
           <div class='mb-3'>
             Comment 
@@ -178,15 +169,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         </div>
         </td>
       </tr>
-      <!-- <tr>
-        <td colspan=2>
-          <div class='mb-3'>
-            Date
-            <input type='text' class='form-control' id='date' name='date'
-            value="" />
-          </div>
-        </td>
-      </tr> -->
     </table>
 
     <div class="row g-3 mx-auto">    
@@ -195,6 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
            title="Submit new review" />
       <input type="hidden" name="MovieID" value="<?php echo $_POST['MovieID']; ?>" /> 
       <input type="hidden" name="Date" value="<?php date_default_timezone_set("America/New_York"); echo date("Y-m-d"); ?>" />                  
+      <input type="hidden" name="userID" value="<?php echo $_SESSION['id'] ?>" />
       </div>	    
       <div class="col-4 d-grid ">
       <input type="submit" value="Confirm update" id="cofmBtn" name="cofmBtn" class="btn btn-primary"
@@ -263,9 +246,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
        </form>
      </td>
      <td>
-       <form action="request.php" method="post"> 
-          <input type="submit" value="ADD" name="movieaddBtn" 
-                 class="btn btn-success" /> 
+       <form action="request.php" method="post">
+          <?php if($_SESSION['id']): ?> 
+            <input type="submit" value="ADD" name="movieaddBtn" 
+                  class="btn btn-success" />
+          <?php else: ?>
+            <input type="submit" value="ADD" name="movieaddBtn" 
+                  class="btn btn-success" disabled/>
+          <?php endif;?>
           <input type="hidden" name="MovieID" 
                  value="<?php echo $movie_info['MovieID']; ?>" /> 
        </form>
