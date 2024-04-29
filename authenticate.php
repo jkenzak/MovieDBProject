@@ -9,7 +9,7 @@ if (!isset($_POST['username'], $_POST['password'])) {
 // Assuming $db is properly initialized in another included file
 require 'db.php'; // Include your database connection file here
 
-$query = "SELECT ReviewerID, Password FROM User WHERE Username = :username";
+$query = "SELECT ReviewerID, `Password` FROM User WHERE Username = :username";
 $statement = $db->prepare($query);
 $statement->bindValue(':username', $_POST['username']);
 $statement->execute();
