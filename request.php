@@ -6,6 +6,8 @@ require("request-db.php");
 
 <?php 
 
+session_start();
+
 $list_of_movies = getAllMovies();
 $add_form = False;
 
@@ -231,7 +233,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
   <thead>
   <tr style="background-color:#B0B0B0">
-    <th><b>Title</b></th>        
+    <th><b>Title</b></th>
+    <th><b>Genre</b></th>        
     <th><b>Release Date</b></th> 
     <th><b>Runtime</b></th>
     <th><b>Average Rating</b></th>        
@@ -242,9 +245,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   <?php foreach ($list_of_movies as $movie_info): ?>
   <tr>
      <td><?php echo $movie_info['Title']; ?></td>        
-     <!-- <td><?php echo $movie_info['Genre']; ?></td>           -->
+     <td><?php foreach (getGenre($movie_info['MovieID']) as $r){echo $r[0];} ?></td>
      <td><?php echo $movie_info['ReleaseDate']; ?></td>
-     <td><?php echo $movie_info['Runtime']; ?></td>   
+     <td><?php echo $movie_info['Runtime']; echo " min" ?></td>   
      <?php if(is_null($movie_info['AvgRating'])): ?>
         <td>N/A</td>
      <?php else: ?>     

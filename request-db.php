@@ -1,4 +1,7 @@
 <?php
+
+session_start();
+
 function addReview($movieID, $userID, $comment, $rating, $date)
 {
    global $db;   
@@ -223,6 +226,20 @@ function searchMovie($searchfor){
 
    $statement = $db->prepare($query);
    $statement->bindValue(':searchfor', $searchfor);
+   $statement->execute();
+   $result = $statement->fetchAll();
+   $statement->closeCursor();
+
+   return $result;
+}
+
+function getGenre($movieid){
+   global $db;
+
+   $query = "select genre from Genre where MovieID=:movieid";
+
+   $statement = $db->prepare($query);
+   $statement->bindValue(':movieid', $movieid);
    $statement->execute();
    $result = $statement->fetchAll();
    $statement->closeCursor();
