@@ -1,6 +1,6 @@
 <?php
-require("connect-db.php");  // Include your DB connection settings
-require("request-db.php");  // Include your DB functions, make sure this includes the loginUser function
+require("connect-db.php");
+require("request-db.php");
 
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
 <body>
 <?php include("header.php"); ?>
 <div class="w3-container w3-margin-top" style="max-width: 400px; margin: auto;">
-    <h1 class="w3-center">MovieReviews</h1> <!-- Title added here -->
+    <h1 class="w3-center">MovieReviews</h1> 
     <h2 class="w3-center">Login</h2>
     <?php if (!empty($message)): ?>
         <p class="w3-text-red w3-center"><?php echo $message; ?></p>
