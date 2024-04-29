@@ -18,19 +18,19 @@ $statement->execute();
 
 if ($statement->rowCount() > 0) {
     $user = $statement->fetch(PDO::FETCH_ASSOC);
-    if (password_verify($_POST['password'], $user['Password'])) {
+    // password_verify($_POST['password'], $user['Password'])
+    if ($_POST['password'] === $user['Password']) {
         session_regenerate_id();
         $_SESSION['loggedin'] = TRUE;
         $_SESSION['name'] = $_POST['username'];
         $_SESSION['id'] = $user['ReviewerID'];
-        header('Location: request-db.php'); 
+        header('Location: request.php'); 
         exit();
     } else {
-      
         echo 'Incorrect username and/or password!';
     }
 } else {
- 
+    echo 2;
     echo 'Incorrect username and/or password!';
 }
 
