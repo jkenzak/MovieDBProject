@@ -58,29 +58,67 @@ function getReviewsByMovieId($id)
 }
 
 //delete review
-function deleteReview($reviewID) {
+function deleteReview($reviewID, $userID) {
    global $db;
 
-   $query = "DELETE FROM Review WHERE ReviewID = :reviewID";
+   $query = "SELECT * FROM Review WHERE ReviewID = :reviewID AND UserID = :userID";
    $statement = $db->prepare($query);
    $statement->bindValue(':reviewID', $reviewID);
+   $statement->bindValue(':userID', $userID);
    $statement->execute();
+   $result = $statement->fetch();
    $statement->closeCursor();
+
+   if ($result) {
+       $query = "DELETE FROM Review WHERE ReviewID = :reviewID";
+       $statement = $db->prepare($query);
+       $statement->bindValue(':reviewID', $reviewID);
+       $statement->execute();
+       $statement->closeCursor();
+   }
 }
 
 //update review
 function updateReview($reviewID, $movieID, $userID, $comment, $rating, $date) {
     global $db;
-    $query = "UPDATE reviews SET MovieID = :movieID, UserID = :userID, Comment = :comment, Rating = :rating, ReviewDate = :date WHERE ReviewID = :reviewID";
+
+    $query = "SELECT * FROM Review WHERE ReviewID = :reviewID AND UserID = :userID";
     $statement = $db->prepare($query);
     $statement->bindValue(':reviewID', $reviewID);
-    $statement->bindValue(':movieID', $movieID);
     $statement->bindValue(':userID', $userID);
-    $statement->bindValue(':comment', $comment);
-    $statement->bindValue(':rating', $rating);
-    $statement->bindValue(':date', $date);
     $statement->execute();
+    $result = $statement->fetch();
     $statement->closeCursor();
+
+    if ($result) {
+        $query = "UPDATE reviews SET MovieID = :movieID, UserID = :userID, Comment = :comment, Rating = :rating, ReviewDate = :date WHERE ReviewID = :reviewID";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':reviewID', $reviewID);
+        $statement->bindValue(':movieID', $movieID);
+        $statement->bindValue(':userID', $userID);
+        $statement->bindValue(':comment', $comment);
+        $statement->bindValue(':rating', $rating);
+        $statement->bindValue(':date', $date);
+        $statement->execute();
+        $statement->closeCursor();
+    }
+}
+
+//organize movies by rating
+function getMoviesByRating()
+{
+   global $db;
+   $query = "SELECT Movie.MovieID, Movie.Title, AVG(Review.Rating) as AverageRating
+             FROM Movie
+             LEFT JOIN Review ON Movie.MovieID = Review.MovieID
+             GROUP BY Movie.MovieID, Movie.Title
+             ORDER BY AverageRating DESC"; 
+   $statement = $db->prepare($query);
+   $statement->execute();
+   $result = $statement->fetchAll(); 
+   $statement->closeCursor();
+
+   return $result;
 }
 
 function registerUser($username, $password) {
