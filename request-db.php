@@ -144,16 +144,15 @@ function loginUser($username, $password) {
        $statement = $db->prepare($query);
        $statement->bindValue(':username', $username);
        $statement->execute();
-       $user = $statement->fetch(PDO::FETCH_ASSOC);
+       $result = $statement->fetch();
        $statement->closeCursor();
 
-       if ($password == $user['Password']) {
+       if ($password == $result) {
            if (!isset($_SESSION['loggedin'])) { 
                session_start();
            }
            $_SESSION['loggedin'] = true;
            $_SESSION['username'] = $username;
-           $_SESSION['userID'] = $user['UserID'];
            return true;
        } else {
            return false;
